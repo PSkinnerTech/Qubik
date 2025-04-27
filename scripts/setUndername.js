@@ -8,34 +8,26 @@ async function setUndername() {
             throw new Error('wallet.json not found in the root of your project');
         }
         
-        // Check for manifest.json
-        if (!fs.existsSync('./manifest.json')) {
-            throw new Error('manifest.json not found. Please run `pnpm deploy` first');
-        }
+        // Use the specific transaction ID provided
+        const manifestId = 'YOUR MANIFEST ID / DEPLOYMENT TRANSACTION ID HERE';
+        console.log(`Using manifest ID: ${manifestId}`);
 
         const jwk = JSON.parse(fs.readFileSync('./wallet.json', 'utf8'));
-        const manifest = JSON.parse(fs.readFileSync('./manifest.json', 'utf8'));
         
-        if (!manifest.id) {
-            throw new Error('No manifest ID found in manifest.json. Please deploy your site first');
-        }
-
-        console.log(`Using manifest ID: ${manifest.id}`);
-
         const ant = ANT.init({
             signer: new ArweaveSigner(jwk),
-            processId: 'YOUR_PROCESS_ID_HERE'
+            processId: 'YOUR PROCESS ID HERE'
         });
 
         const { id: txId } = await ant.setUndernameRecord({
-            undername: 'dapp', // You might want to make this configurable
-            transactionId: manifest.id,
+            undername: 'quiz',
+            transactionId: manifestId,
             ttlSeconds: 900 // 15 minutes
         });
 
         console.log('\nUndername Record Update Complete! 🎉');
         console.log(`Transaction ID: ${txId}`);
-        console.log(`View your deployment at: https://dapp_YOUR_NAME.ar.io\n`);
+        console.log(`Go to the undername page you deployed to to view it live.\n`);
     } catch (error) {
         console.error('Failed to update undername record:', error);
         process.exit(1);

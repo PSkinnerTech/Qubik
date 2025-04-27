@@ -28,3 +28,8 @@ package-lock.json
 pnpm-lock.yaml
 manifest.json
 .cursorrules
+.env
+.env.local
+
+docs/
+cursor/

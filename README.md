@@ -1,205 +1,222 @@
-<p align="center">
-  <img src="https://arweave.net/Iodraq9lSkvwvWKdHmKIs54STnKkCNK-YuS5c4avAyE" alt="Zero to Arweave Starter Kit Banner" width="100%" />
-</p>
+# QUBIK - AO Quiz App
 
-# Zero to Arweave Starter Kit
+QUBIK is a fully decentralized quiz application built on Arweave and AO. This demonstration app showcases how to build a permanent web application with a decentralized backend.
 
-A comprehensive starter kit for building decentralized applications on Arweave using React, Vite, and three powerful SDKs:
+## Features
 
-- [Arweave Wallet Kit](https://docs.arweavekit.com/arweave-wallet-kit/introduction) - Unified wallet interaction
-- [AR.IO SDK](https://docs.ar.io/build/ar-io-sdk/getting-started) - Gateway and name system integration
-- [Turbo SDK](https://docs.ardrive.io/docs/turbo/turbo-sdk/#installation) - Fast and efficient data uploads
+- 🧠 **Quiz System** - Multiple-choice quiz powered by AO's decentralized compute environment
+- 🏆 **Leaderboard** - Global leaderboard storing scores on AO
+- 🔗 **Decentralized Backend** - Utilizes AO as the backend for storing questions, processing answers, and maintaining scores
+- 🌐 **Permanent Deployment** - Deployed on Arweave's permaweb for permanent availability
+- 👤 **Wallet Integration** - Uses Arweave Wallet Kit for simple wallet connection
+- 📝 **ArNS Integration** - Human-readable domain names through the AR.IO name system
+
+## Technology Stack
+
+- **Frontend**: React + Vite
+- **Deployment**: ArDrive Turbo SDK
+- **Name System**: AR.IO SDK
+- **Backend**: AO Process (Lua)
+- **Wallet Connection**: Arweave Wallet Kit
 
 ## Prerequisites
 
 - Node.js 16+
-- Package manager (pnpm or yarn)
-- An Arweave wallet (JSON file)
-- An AR.IO name (get one at https://arns.app)
+- pnpm (recommended package manager)
+- Arweave wallet (JSON keyfile)
+- Turbo credits for deployment ([purchase here](https://turbo-topup.com))
+- $ARIO tokens for ArNS ([purchase here](https://arns.app))
+- AOS installed for AO process management
 
-## Features
+## Getting Started
 
-- 🔐 **Wallet Integration** - Seamless wallet connection with Arweave Wallet Kit
-- 📝 **Name System** - AR.IO name system integration for human-readable addresses
-- 🚀 **Fast Uploads** - Turbo-powered deployments for efficient data uploads
-- 🎨 **Modern UI** - Clean, responsive interface with Tailwind CSS
-- 📱 **Mobile Ready** - Fully responsive design that works on all devices
-- 🛠️ **Developer Tools** - Comprehensive scripts for deployment and management
-- 🔗 **Hash Routing** - Client-side routing that works with Arweave's permanent storage
+### 1. Clone and Install Dependencies
 
-## Quick Start
-
-1. Clone the repository
 ```bash
-git clone https://github.com/PSkinnerTech/ZeroToArweave-StarterKit.git
-```
-2. Install dependencies:
-```bash
-# Using pnpm
+git clone https://github.com/yourusername/qubik-quiz-app.git
+cd qubik-quiz-app
 pnpm install
-
-# OR using yarn
-yarn install
 ```
-3. Place your Arweave wallet file in the project root as `wallet.json`
-4. Start the development server:
+
+### 2. Setting Up the AO Backend Process
+
+#### Install AOS (AO Operating System)
+
 ```bash
-pnpm run dev  # or yarn dev
+# Install AOS globally
+npm install -g aos
 ```
 
-## SDK Integration
+#### Create a New AO Process
 
-### Arweave Wallet Kit
-- Handles wallet connections and transactions
-- Provides React hooks for wallet state
-- Manages wallet permissions and address access
-
-### AR.IO SDK
-- Manages AR.IO name system integration
-- Handles record updates and primary name resolution
-- Provides gateway integration features
-
-### Turbo SDK
-- Powers fast and efficient deployments
-- Handles manifest generation
-- Manages data uploads to Arweave
-
-## Available Scripts
-
-### Development
 ```bash
-# Start development server
-pnpm dev  # or yarn dev
-
-# Build for production
-pnpm build  # or yarn build
-
-# Preview production build
-pnpm preview  # or yarn preview
+# Initialize a new AO process
+aos create
 ```
 
-### Deployment Scripts
+This will output a Process ID. **Save this Process ID** as you'll need it for your frontend configuration.
 
-#### Deploy to Arweave
+#### Load the Quiz Process
+
+1. Copy the Process ID from the previous step
+2. Load the quiz.lua file into your process:
+
 ```bash
-pnpm run deploy  # or yarn deploy
+aos load <YOUR_PROCESS_ID> ./lua/quiz.lua
 ```
-This will:
-- Build your application
-- Upload to Arweave via Turbo
-- Generate a manifest file
-- Provide a deployment URL: `https://arweave.net/{manifestId}`
 
-> ⚠️ **Important**: You must have Turbo credits in your wallet for deployment to work. If you need Turbo credits, visit [turbo-topup.com](https://turbo-topup.com) to purchase some.
+You should see a confirmation message that the process has been loaded with the quiz.lua code.
 
-#### Update AR.IO Name
+### 3. Configure Your Frontend
 
-> ⚠️ **Important**: You must first deploy your app using `pnpm run deploy` before setting up your ARNS name. Make sure you have a successful deployment before proceeding.
+Update your AO Process ID in the frontend configuration:
 
-To use an ARNS name as your Arweave Dapp's URL, follow these steps:
-
-1. Visit [arns.app](https://arns.app)
-2. Connect your Arweave wallet
-3. Purchase an ARNS name if you haven't already (requires $ARIO tokens)
-4. Click "Manage Assets" in the top-right
-5. Click the settings icon on your desired ARNS name
-6. Copy the Process ID
-7. Open `/scripts/setBaseArns.js` and update the `processId` in the `ant` configuration:
-```javascript
-const ant = ANT.init({
-    signer: new ArweaveSigner(jwk),
-    processId: 'YOUR_PROCESS_ID_HERE'
-});
-```
-8. Run the ARNS update command:
 ```bash
-pnpm run set-base  # or yarn set-base
+# Edit the environment file
+vi .env
 ```
 
-This will:
-- Update your AR.IO name with the latest deployment
-- Make your site available at: `https://{your-name}.ar.io`
+Add or modify the following line:
 
-#### Set Undername Record
+```
+VITE_AO_PROCESS_ID=<YOUR_PROCESS_ID>
+```
 
-To set an undername record for your AR.IO name:
+### 4. Local Development
 
-1. Make sure you have completed the base name setup above
-2. Open `/scripts/setUndername.js` and update the `processId`
-3. Run the undername command:
 ```bash
-pnpm run set-undername  # or yarn set-undername
+pnpm dev
 ```
 
-This will create an undername record that makes your site available at: `https://{undername}_{your-name}.ar.io`
+Visit `http://localhost:5173` to see your app in action.
 
-#### View AR.IO Records
+## Customizing the Quiz
 
-To view all records associated with your AR.IO name, follow these steps:
+The quiz questions and logic are stored in `lua/quiz.lua`. You can modify this file to change:
 
-1. Visit [arns.app](https://arns.app)
-2. Connect your Arweave wallet
-3. Click "Manage Assets" in the top-right
-4. Click the settings icon on your desired ARNS name
-5. Copy the Process ID
-6. Open `/scripts/getRecords.js` and update the `processId`:
-```javascript
-const ant = ANT.init({ 
-    processId: 'YOUR_PROCESS_ID_HERE'
-});
-```
-7. Run the records command:
+- Quiz questions and answer options
+- The number of questions
+- The scoring logic
+- Leaderboard behavior
+
+After making changes to the quiz.lua file, reload it to your AO process:
+
 ```bash
-pnpm run records  # or yarn records
+aos load <YOUR_PROCESS_ID> ./lua/quiz.lua
 ```
-This will display all records associated with your AR.IO name, including the current @ record if one exists.
 
-#### Get Primary Name
+## Deployment to Arweave
 
-To look up the primary name for any Arweave address:
+### 1. Prepare Your Wallet
 
-1. Copy the Arweave address you want to look up
-2. Run the primary name command with the address:
+1. Export your wallet JSON file from [Wander](https://wander.app) (formerly ArConnect)
+2. Place the wallet JSON file in the root of your project
+3. Rename it to `wallet.json`
+
+### 2. Build and Deploy
+
 ```bash
-pnpm run primary <arweave-address>  # or yarn primary <arweave-address>
+# Build the application
+pnpm build
+
+# Deploy to Arweave
+pnpm run deploy
 ```
 
-For example:
+After successful deployment, you'll receive a **Transaction ID** (manifest ID). **Save this ID** as you'll need it for the next steps.
+
+> ⚠️ **Note**: You must have sufficient Turbo credits in your wallet for deployment. Purchase them at [turbo-topup.com](https://turbo-topup.com) if needed.
+
+### 3. Setting Up Your ArNS Name
+
+#### Option 1: Setting a Base ArNS Name
+
+1. Purchase an ArNS name from [arns.app](https://arns.app) (requires $ARIO tokens)
+2. From the ArNS app, find your name's Process ID (under Manage Assets → Settings)
+3. Edit `scripts/setBaseArns.js`:
+   - Update the `processId` value to your ArNS Process ID
+   - Ensure the `manifest.id` is correctly read from your deployment
+
+4. Run the command:
 ```bash
-pnpm run primary vh-NTHVvlKZqRxc8LyyTNok65yQ55a_PJ1zWLb9G2JI
+pnpm run set-base
 ```
 
-This will display the primary name associated with the provided Arweave address, if one exists.
+Your app will now be accessible at `https://{your-name}.ar.io`
 
-## Development Workflow
+#### Option 2: Setting an Undername
 
-1. Make changes to your application
-2. Test locally with `pnpm run dev`
-3. Build with `pnpm run build`
-4. Deploy with `pnpm run deploy`
-5. Update AR.IO name with `pnpm run set-base`
-6. Set undername (if needed) with `pnpm run set-undername`
-7. Verify records with `pnpm run records`
+1. Complete the base name setup above
+2. Edit `scripts/setUndername.js`:
+   - Update the `processId` to your ArNS Process ID
+   - Set the `undername` value (default is "quiz")
+   - Update the `manifestId` to your deployment Transaction ID
+
+3. Run:
+```bash
+pnpm run set-undername
+```
+
+Your app will now be accessible at `https://{undername}_{your-name}.ar.io`
+
+## Understanding the Application Architecture
+
+### Frontend (React/Vite)
+
+The frontend is responsible for:
+- Displaying the quiz interface
+- Connecting to user wallets
+- Sending answers to the AO process
+- Displaying scores and leaderboard
+
+### Backend (AO Process)
+
+The AO process (`quiz.lua`) handles:
+- Storing quiz questions and correct answers
+- Processing user submissions
+- Calculating and storing scores
+- Generating the leaderboard
+
+### Data Flow
+
+1. User connects their Arweave wallet
+2. Frontend fetches questions from the AO process
+3. User submits answers
+4. AO process validates answers and calculates score
+5. Score is stored in the AO process state
+6. Leaderboard is updated with the new score
+
+## Scripts Reference
+
+- `pnpm dev` - Run local development server
+- `pnpm build` - Build for production
+- `pnpm run deploy` - Deploy to Arweave
+- `pnpm run set-base` - Set your base ArNS name
+- `pnpm run set-undername` - Set an undername for your ArNS
+- `pnpm run records` - View your ArNS records
 
 ## Important Notes
 
-- Never commit your Arweave Keyfile to version control, it's currently in the `.gitignore` file as long as you name your keyfile `wallet.json`.
-- Keep your manifest ID after deployment
-- AR.IO name updates may take a few minutes to propagate
-- Default TTL for name records is 15 minutes
-- Ensure proper permissions are granted when connecting wallets
+- Your wallet.json file contains your private keys - **NEVER commit it to version control**
+- ArNS updates take a few minutes to propagate across the network
+- Always keep your deployment Transaction IDs for future reference
+- $ARIO tokens are required for any ArNS operations
+- Turbo credits are required for deployment to Arweave
 
 ## Troubleshooting
 
-- If deployment fails, check your wallet balance
-- If name updates fail, verify your AR.IO name ownership
-- For wallet connection issues, ensure proper permissions
-- Check the console for detailed error messages
-
-## Contributing
-
-Contributions are welcome! Please read our contributing guidelines for details.
+- **Deployment Fails**: Check your Turbo credit balance
+- **ArNS Updates Fail**: Verify your ArNS ownership and $ARIO balance
+- **AO Process Issues**: Check process ID and ensure the Lua code was loaded correctly
+- **Wallet Connection Issues**: Ensure the Wander extension is installed and accessible
 
 ## License
 
-This project is licensed under the MIT License - see the  LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+
+- [Arweave](https://arweave.org) - Permanent storage layer
+- [AO](https://ao.arweave.dev) - Decentralized compute environment
+- [AR.IO](https://ar.io) - Gateway and name system
+- [ArDrive](https://ardrive.io) - Permanent storage solution

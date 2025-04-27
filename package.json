@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "node scripts/deploy.js",
-    "set=base": "node scripts/setBaseArns.js",
+    "set-base": "node scripts/setBaseArns.js",
     "records": "node scripts/getRecords.js",
     "primary": "node scripts/getPrimaryName.js",
     "set-undername": "node scripts/setUndername.js"
@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@permaweb/aoconnect": "^0.0.82",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",

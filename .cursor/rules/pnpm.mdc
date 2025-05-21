@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Only use `pnpm` for package management.
+
+We're not using `npm`, `yarn`, or `bun`.
